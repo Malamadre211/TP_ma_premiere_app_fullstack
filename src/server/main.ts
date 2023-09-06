@@ -3,6 +3,8 @@ import ViteExpress from "vite-express";
 import fs from "fs-extra";
 import "dotenv/config"
 
+const fileName = "hello.json"
+
 console.log("env", process.env.PORT)
 const port = process.env.PORT as string
 
@@ -13,7 +15,24 @@ app.get("/hello", (_, res) => {
 });
 
 app.get('/hello/:nom', function (req, res) {
+  const data = fs.readJSONSync(fileName)
+  const hellos = data
+  console.log('hellos', hellos)
+  hellos.push(req.params.nom)
+  fs.writeJsonSync(fileName, hellos)
   res.send("Bonjour " + req.params.nom);
+}) 
+
+app.get('/hellos', function (req, res) {
+  const data = fs.readJSONSync(fileName)
+  console.log(data)
+  res.send(JSON.stringify(data))
+})
+
+app.get('/hellos', function (req, res) {
+  const data = fs.readJSONSync(fileName)
+  console.log(data)
+  res.send(JSON.stringify(data))
 })
 
 ViteExpress.listen(app, parseInt(port), () =>
